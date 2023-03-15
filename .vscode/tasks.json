@@ -10,7 +10,7 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "mkdir -p bin && g++ main.cpp -std=c++20 -lGL -lglut -o bin/ssucg.out",
+			"command": "mkdir -p bin && g++ main.cpp -std=c++20 -lGL -lGLU -lglut -o bin/ssucg.out",
 		},
 	],
 }

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WebGL Lights and Camera Control</title>
+</head>
+<body>
+    <canvas id="glcanvas" width="640" height="480"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+    <script src="webgl-utils.js"></script>
+
+    <script>
+        var gl;
+        var shaderProgram;
+        var vertexPositionAttribute;
+        var perspectiveMatrix;
+        var mvMatrix;
+
+        // Initialize the WebGL context
+        function initGL(canvas) {
+            try {
+                gl = canvas.getContext("webgl");
+                gl.viewportWidth = canvas.width;
+                gl.viewportHeight = canvas.height;
+            } catch (e) {
+            }
+            if (!gl) {
+                alert("Could not initialize WebGL");
+            }
+        }
+
+        // Load and compile the shader programs
+        function initShaders() {
+            var fragmentShader = getShader(gl, "shader-fs");
+            var vertexShader = getShader(gl, "shader-vs");
+
+            shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+
+            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+                alert("Could not initialize shaders");
+            }
+
+            gl.useProgram(shaderProgram);
+
+            vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+            gl.enableVertexAttribArray(vertexPositionAttribute);
+        }
+
+        // Create and compile the shader program
+        function getShader(gl, id) {
+            var shaderScript = document.getElementById(id);
+            if (!shaderScript) {
+                return null;
+            }
+
+            var str = "";
+            var k = shaderScript.firstChild;
+            while (k) {
+                if (k.nodeType == 3) {
+                    str += k.textContent;
+                }
+                k = k.nextSibling;
+            }
+
+            var shader;
+            if (shaderScript.type == "x-shader/x-fragment") {
+                shader = gl.createShader(gl.FRAGMENT_SHADER);
+            } else if (shaderScript.type == "x-shader/x-vertex") {
+                shader = gl.createShader(gl.VERTEX_SHADER);
+            } else {
+                return null;
+            }
+
+            gl.shaderSource(shader, str);
+            gl.compileShader(shader);
+
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                alert(gl.getShaderInfoLog(shader));
+                return null;
+            }
+
+            return shader;
+        }
+
+        // Set up the perspective matrix
+        function setMatrixUniforms() {
+            var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+            gl.uniformMatrix4fv(pUniform, false, perspectiveMatrix);
+
+            var mvUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+            gl.uniformMatrix4fv(mvUniform, false, mvMatrix);
+        }
+
+        // Initialize the scene
+        function initScene() {
+            // Set the perspective matrix
+            perspectiveMatrix = mat4.create();
+            mat4.perspective(perspectiveMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+
+            // Set the model-view matrix
+            mvMatrix = mat4.create();
+            mat4.identity(mvMatrix);
+            mat4.translate(mvMatrix, mvMatrix, vec3.fromValues([0.0, 0.0, -6.0]));
+
+				    // Set up the lighting
+				    var lighting = document.getElementById("lighting").checked;
+				    if (lighting) {
+				        gl.uniform1i(gl.getUniformLocation(shaderProgram, "uLighting"), 1);
+
+				        // Set up the ambient light
+				        gl.uniform3f(gl.getUniformLocation(shaderProgram, "uAmbientColor"), 0.2, 0.2, 0.2);
+
+				        // Set up the directional light
+				        var lightingDirection = [                parseFloat(document.getElementById("lightDirectionX").value),                parseFloat(document.getElementById("lightDirectionY").value),                parseFloat(document.getElementById("lightDirectionZ").value)            ];
+				        var adjustedLD = vec3.create();
+				        vec3.normalize(adjustedLD, lightingDirection);
+				        vec3.scale(adjustedLD, adjustedLD, -1);
+				        gl.uniform3fv(gl.getUniformLocation(shaderProgram, "uLightingDirection"), adjustedLD);
+
+				        // Set up the directional light color
+				        gl.uniform3f(gl.getUniformLocation(shaderProgram, "uDirectionalColor"), 0.8, 0.8, 0.8);
+				    } else {
+				        gl.uniform1i(gl.getUniformLocation(shaderProgram, "uLighting"), 0);
+				    }
+				}
+
+				// Draw the scene
+				function drawScene() {
+				    gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+				    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+				    gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+
+				    // Draw the object
+				    setMatrixUniforms();
+				    gl.drawArrays(gl.TRIANGLES, 0, numVertices);
+				}
+
+				// Set up the camera
+				function setCamera() {
+				    // Set the model-view matrix
+				    mvMatrix = mat4.create();
+				    mat4.identity(mvMatrix);
+
+				    var cameraAngle = parseFloat(document.getElementById("cameraAngle").value);
+				    mat4.rotate(mvMatrix, mvMatrix, cameraAngle, vec3.fromValues(0, 1, 0));
+
+				    var cameraPosition = [            parseFloat(document.getElementById("cameraX").value),            parseFloat(document.getElementById("cameraY").value),            parseFloat(document.getElementById("cameraZ").value)        ];
+				    mat4.translate(mvMatrix, mvMatrix, vec3.fromValues(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+
+				    // Draw the scene
+				    drawScene();
+				}
+
+				// Set up the controls
+				function setControls() {
+				    var lightingCheckbox = document.getElementById("lighting");
+				    lightingCheckbox.onchange = function() {
+				        initScene();
+				    };
+
+				    var cameraControls = document.getElementsByClassName("camera-control");
+				    for (var i = 0; i < cameraControls.length; i++) {
+				        cameraControls[i].onchange = function() {
+				            setCamera();
+				        };
+				    }
+				}
+
+				// Main function
+				function webGLStart() {
+				    var canvas = document.getElementById("glcanvas");
+				    initGL(canvas);
+				    initShaders();
+				    initScene();
+				    setControls();
+				}
+		</script>
+
+		<script id="shader-fs" type="x-shader/x-fragment">
+				precision mediump float;
+
+				varying vec4 vColor;
+
+				uniform bool uLighting;
+				uniform vec3 uAmbientColor;
+				uniform vec3 uLightingDirection;
+				uniform vec3 uDirectionalColor;
+
+				void main(void) {
+				    vec3 ambient = uAmbientColor;
+				    vec3 directional = vec3(0.0, 0.0, 0.0);
+				    if (uLighting) {
+				        float directionalLightWeighting = max(dot(normalize(vec3(0.0, 0.0, -1.0)), normalize(uLightingDirection)), 0.0);
+				        directional = uDirectionalColor * directionalLightWeighting;
+				    }
+
+				    gl_FragColor = vColor + vec4(ambient + directional, 1.0);
+				}
+		</script>
+
+		<script id="shader-vs" type="x-shader/x-vertex">
+				attribute vec3 aVertexPosition;
+				attribute vec4 aVertexColor;
+
+				uniform mat4 uMVMatrix;
+				uniform mat4 uPMatrix;
+
+				varying vec4 vColor;
+
+				void main(void) {
+				    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+				    vColor = aVertexColor;
+				}
+		</script>
+		</head>
+		<body onload="webGLStart();">
+				<canvas id="glcanvas" width="640" height="480">
+				    Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.
+				</canvas>
+				<form>
+						<input type="checkbox" id="lighting" checked>Enable Lighting</input><br />
+
+						<label for="cameraX">Camera X:</label>
+						<input type="range" id="cameraX" class="camera-control" min="-10" max="10" step="0.1" value="-3"></input><br />
+
+						<label for="cameraY">Camera Y:</label>
+						<input type="range" id="cameraY" class="camera-control" min="-10" max="10" step="0.1" value="0"></input><br />
+
+						<label for="cameraZ">Camera Z:</label>
+						<input type="range" id="cameraZ" class="camera-control" min="-10" max="10" step="0.1" value="-6"></input><br />
+
+						<label for="cameraAngle">Camera Angle:</label>
+						<input type="range" id="cameraAngle" class="camera-control" min="-180" max="180" step="1" value="0"></input><br />
+
+						<label for="lightDirectionX">Light Direction X:</label>
+						<input type="range" id="lightDirectionX" min="-10" max="10" step="0.1" value="-1"></input><br />
+
+						<label for="lightDirectionY">Light Direction Y:</label>
+						<input type="range" id="lightDirectionY" min="-10" max="10" step="0.1" value="-1"></input><br />
+
+						<label for="lightDirectionZ">Light Direction Z:</label>
+						<input type="range" id="lightDirectionZ" min="-10" max="10" step="0.1" value="-1"></input><br />
+				</form>
+		</body>
+</html>
