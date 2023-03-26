@@ -5,12 +5,14 @@
 			"label": "Run(Debug)",
 			"type": "shell",
 			"command": "bin/ssucg.out",
-			"dependsOn": ["Build"]
+			"dependsOn": [
+				"Build"
+			]
 		},
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "mkdir -p bin && g++ main.cpp -std=c++20 -lGL -lGLU -lglut -o bin/ssucg.out",
+			"command": "mkdir -p bin && g++ main.cpp -std=c++20 -lGL -lGLU -lglut -o bin/ssucg.out"
 		},
 	],
 }
