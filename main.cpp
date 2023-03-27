@@ -1,138 +1,122 @@
+#include <stdio.h>
 #include <GL/glut.h>
 #include <cmath>
 
-// Cube vertices
-GLfloat vertices[][3] = {
-  {-1.0,-1.0,-1.0},
-  {1.0,-1.0,-1.0},
-  {1.0,1.0,-1.0},
-  {-1.0,1.0,-1.0},
-  {-1.0,-1.0,1.0},
-  {1.0,-1.0,1.0},
-  {1.0,1.0,1.0},
-  {-1.0,1.0,1.0}
-};
+const double PI = 3.14159265358979323846;
 
-// Cube edges
-GLubyte edges[][2] = {
-  {0,1},
-  {1,2},
-  {2,3},
-  {3,0},
-  {4,5},
-  {5,6},
-  {6,7},
-  {7,4},
-  {0,4},
-  {1,5},
-  {2,6},
-  {3,7}
-};
+GLfloat cubevtx[][3] = {
+    {-1.0, -1.0, -1.0},
+    {1.0, -1.0, -1.0},
+    {1.0, 1.0, -1.0},
+    {-1.0, 1.0, -1.0},
+    {-1.0, -1.0, 1.0},
+    {1.0, -1.0, 1.0},
+    {1.0, 1.0, 1.0},
+    {-1.0, 1.0, 1.0}};
+GLubyte cubeedg[][2] = {{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
 
 // Camera position and rotation
 GLfloat camX = 0.0, camY = 0.0, camZ = 5.0;
-GLfloat camYaw = 0.0, camPitch = 0.0;
+GLfloat camRotY = 0.0, camRotX = 0.0;
+GLfloat cubeRotY = 0;
 
-void display() {
+void display()
+{
   // Clear screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
+
   // Reset modelview matrix
   glLoadIdentity();
-  
+
   // Apply camera transformation
   glTranslatef(-camX, -camY, -camZ);
-  glRotatef(-camPitch, 1.0, 0.0, 0.0);
-  glRotatef(-camYaw, 0.0, 1.0, 0.0);
-  
+  glRotatef(-camRotX, 1.0, 0.0, 0.0);
+  glRotatef(-camRotY, 0.0, 1.0, 0.0);
+
   // Draw cube edges
+  glPushMatrix();
+  glRotatef(cubeRotY, 0.0, 1.0, 0.0);
   glColor3f(1.0, 1.0, 1.0);
   glBegin(GL_LINES);
   for (int i = 0; i < 12; i++) {
-    glVertex3fv(vertices[edges[i][0]]);
-    glVertex3fv(vertices[edges[i][1]]);
+    glVertex3fv(cubevtx[cubeedg[i][0]]);
+    glVertex3fv(cubevtx[cubeedg[i][1]]);
   }
   glEnd();
-  
+  glPopMatrix();
+
   // Swap buffers
   glutSwapBuffers();
 }
 
-void reshape(int w, int h) {
+void reshape(int w, int h)
+{
   // Set viewport to cover entire window
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  
+
   // Set projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(60.0, (GLfloat)w/(GLfloat)h, 0.1, 100.0);
-  
+  gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
+
   // Reset modelview matrix
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
 
-void idle() {
-  // Rotate cube
-  static GLfloat angle = 0.0;
-  angle += 0.5;
-  if (angle > 360.0) {
-    angle -= 360.0;
+void idle()
+{
+  cubeRotY += 0.5;
+  if (cubeRotY > 360.0) {
+    cubeRotY -= 360.0;
   }
-  glRotatef(angle, 0.0, 1.0, 0.0);
-  
-  // Redraw
   glutPostRedisplay();
 }
 
 void keyboard(unsigned char key, int x, int y) {
   switch (key) {
-    // Camera movement
     case 'w':
-      camX -= 0.1 * sin(camYaw * 3.14159265358979323846 / 180.0);
-      camZ += 0.1 * cos(camYaw * 3.14159265358979323846 / 180.0);
+      camX -= 0.1 * sin(camRotY * PI / 180.0);
+      camZ += 0.1 * cos(camRotY * PI / 180.0);
       break;
     case 's':
-      camX += 0.1 * sin(camYaw * 3.14159265358979323846 / 180.0);
-      camZ -= 0.1 * cos(camYaw * 3.14159265358979323846 / 180.0);
+      camX += 0.1 * sin(camRotY * PI / 180.0);
+      camZ -= 0.1 * cos(camRotY * PI / 180.0);
       break;
     case 'a':
-      camX -= 0.1 * sin((camYaw - 90.0) * 3.14159265358979323846 / 180.0);
-      camZ += 0.1 * cos((camYaw - 90.0) * 3.14159265358979323846 / 180.0);
+      camX -= 0.1 * sin((camRotY - 90.0) * PI / 180.0);
+      camZ += 0.1 * cos((camRotY - 90.0) * PI / 180.0);
       break;
     case 'd':
-      camX += 0.1 * sin((camYaw - 90.0) * 3.14159265358979323846 / 180.0);
-      camZ -= 0.1 * cos((camYaw - 90.0) * 3.14159265358979323846 / 180.0);
+      camX += 0.1 * sin((camRotY - 90.0) * PI / 180.0);
+      camZ -= 0.1 * cos((camRotY - 90.0) * PI / 180.0);
       break;
-      
-    // Camera rotation
     case 'q':
-      camYaw += 2.0;
-      if (camYaw > 360.0) {
-        camYaw -= 360.0;
+      camRotY += 2.0;
+      if (camRotY > 360.0) {
+        camRotY -= 360.0;
       }
       break;
     case 'e':
-      camYaw -= 2.0;
-      if (camYaw < 0.0) {
-        camYaw += 360.0;
+      camRotY -= 2.0;
+      if (camRotY < 0.0) {
+        camRotY += 360.0;
       }
       break;
     case 'r':
-      camPitch += 2.0;
-      if (camPitch > 90.0) {
-        camPitch = 90.0;
+      camRotX += 2.0;
+      if (camRotX > 90.0) {
+        camRotX = 90.0;
       }
       break;
     case 'f':
-      camPitch -= 2.0;
-      if (camPitch < -90.0) {
-        camPitch = -90.0;
+      camRotX -= 2.0;
+      if (camRotX < -90.0) {
+        camRotX = -90.0;
       }
       break;
-      
-    // Quit
-    case 27:  // ESC key
+    // ESC = Quit
+    case 27:
       exit(0);
       break;
   }
