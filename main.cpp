@@ -4,17 +4,6 @@
 
 const double PI = 3.14159265358979323846;
 
-GLfloat cubevtx[][3] = {
-    {-1.0, -1.0, -1.0},
-    {1.0, -1.0, -1.0},
-    {1.0, 1.0, -1.0},
-    {-1.0, 1.0, -1.0},
-    {-1.0, -1.0, 1.0},
-    {1.0, -1.0, 1.0},
-    {1.0, 1.0, 1.0},
-    {-1.0, 1.0, 1.0}};
-GLubyte cubeedg[][2] = {{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
-
 // Camera position and rotation
 GLfloat camX = 0.0, camY = 0.0, camZ = 5.0;
 GLfloat camRotY = 0.0, camRotX = 0.0;
@@ -33,16 +22,14 @@ void display()
   glRotatef(-camRotX, 1.0, 0.0, 0.0);
   glRotatef(-camRotY, 0.0, 1.0, 0.0);
 
-  // Draw cube edges
+  glPushMatrix();
+  glTranslatef(2,0,0);
+  glutSolidSphere (1.0, 20, 16);
+  glPopMatrix();
+
   glPushMatrix();
   glRotatef(cubeRotY, 0.0, 1.0, 0.0);
-  glColor3f(1.0, 1.0, 1.0);
-  glBegin(GL_LINES);
-  for (int i = 0; i < 12; i++) {
-    glVertex3fv(cubevtx[cubeedg[i][0]]);
-    glVertex3fv(cubevtx[cubeedg[i][1]]);
-  }
-  glEnd();
+  glutSolidCube(1);
   glPopMatrix();
 
   // Swap buffers
@@ -126,8 +113,8 @@ int main(int argc, char** argv) {
   // Initialize GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(640, 480);
-  glutCreateWindow("OpenGL Cube");
+  glutInitWindowSize(1280, 720);
+  glutCreateWindow("SSUCG");
 
   // Set up callbacks
   glutDisplayFunc(display);
@@ -135,7 +122,16 @@ int main(int argc, char** argv) {
   glutIdleFunc(idle);
   glutKeyboardFunc(keyboard);
 
-  // Enable depth testing
+  GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+  GLfloat mat_shininess[] = { 50.0 };
+  GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+  glClearColor (0.0, 0.0, 0.0, 0.0);
+  glShadeModel (GL_SMOOTH);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
 
   // Start main loop
