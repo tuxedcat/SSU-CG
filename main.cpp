@@ -18,18 +18,18 @@ void display()
   glLoadIdentity();
 
   // Apply camera transformation
-  glTranslatef(-camX, -camY, -camZ);
   glRotatef(-camRotX, 1.0, 0.0, 0.0);
   glRotatef(-camRotY, 0.0, 1.0, 0.0);
-
-  glPushMatrix();
-  glTranslatef(2,0,0);
-  glutSolidSphere (1.0, 20, 16);
-  glPopMatrix();
+  glTranslatef(-camX, -camY, -camZ);
 
   glPushMatrix();
   glRotatef(cubeRotY, 0.0, 1.0, 0.0);
   glutSolidCube(1);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(2,0,0);
+  glutSolidSphere (1.0, 20, 16);
   glPopMatrix();
 
   // Swap buffers
@@ -54,29 +54,28 @@ void reshape(int w, int h)
 void idle()
 {
   cubeRotY += 0.5;
-  if (cubeRotY > 360.0) {
+  if (cubeRotY > 360.0)
     cubeRotY -= 360.0;
-  }
   glutPostRedisplay();
 }
 
 void keyboard(unsigned char key, int x, int y) {
   switch (key) {
     case 'w':
-      camX -= 0.1 * sin(camRotY * PI / 180.0);
-      camZ += 0.1 * cos(camRotY * PI / 180.0);
-      break;
-    case 's':
       camX += 0.1 * sin(camRotY * PI / 180.0);
       camZ -= 0.1 * cos(camRotY * PI / 180.0);
       break;
-    case 'a':
-      camX -= 0.1 * sin((camRotY - 90.0) * PI / 180.0);
-      camZ += 0.1 * cos((camRotY - 90.0) * PI / 180.0);
+    case 's':
+      camX -= 0.1 * sin(camRotY * PI / 180.0);
+      camZ += 0.1 * cos(camRotY * PI / 180.0);
       break;
-    case 'd':
+    case 'a':
       camX += 0.1 * sin((camRotY - 90.0) * PI / 180.0);
       camZ -= 0.1 * cos((camRotY - 90.0) * PI / 180.0);
+      break;
+    case 'd':
+      camX -= 0.1 * sin((camRotY - 90.0) * PI / 180.0);
+      camZ += 0.1 * cos((camRotY - 90.0) * PI / 180.0);
       break;
     case 'q':
       camRotY += 2.0;
