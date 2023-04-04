@@ -29,7 +29,7 @@ void display()
 
   glPushMatrix();
   glTranslatef(2,0,0);
-  glutSolidSphere (1.0, 20, 16);
+  glutSolidSphere (1.0, 10, 10);
   glPopMatrix();
 
   // Swap buffers
