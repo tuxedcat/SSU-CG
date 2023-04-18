@@ -18,9 +18,9 @@ void display()
   glLoadIdentity();
 
   // Apply camera transformation
+  glTranslatef(-camX, -camY, -camZ);
   glRotatef(-camRotX, 1.0, 0.0, 0.0);
   glRotatef(-camRotY, 0.0, 1.0, 0.0);
-  glTranslatef(-camX, -camY, -camZ);
 
   // glBegin(GL_TRIANGLES);
   // glColor3f(0.1, 0.2, 0.3);
