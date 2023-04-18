@@ -7,7 +7,7 @@ const double PI = 3.14159265358979323846;
 // Camera position and rotation
 GLfloat camX = 0.0, camY = 0.0, camZ = 5.0;
 GLfloat camRotY = 0.0, camRotX = 0.0;
-GLfloat cubeRotY = 0;
+int tick = 0;
 
 void display()
 {
@@ -22,14 +22,85 @@ void display()
   glRotatef(-camRotY, 0.0, 1.0, 0.0);
   glTranslatef(-camX, -camY, -camZ);
 
+  // glBegin(GL_TRIANGLES);
+  // glColor3f(0.1, 0.2, 0.3);
+  // glVertex3f(0, 0, 0);
+  // glVertex3f(1, 0, 0);
+  // glVertex3f(0, 1, 0);
+  // glEnd();
+
+  // glPushMatrix();
+  // glRotatef(tick%360, 0.0, 1.0, 0.0);
+  // glutSolidCube(1);
+  // glPopMatrix();
+
   glPushMatrix();
-  glRotatef(cubeRotY, 0.0, 1.0, 0.0);
+  glTranslatef(0,2,0);
+  glutSolidSphere(1, 10, 10);
+  glPopMatrix();
+  
+  glPushMatrix();
+  glTranslatef(-0.3,2,0.9);
+  glutSolidSphere(0.1, 5, 5);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0.3,2,0.9);
+  glutSolidSphere(0.1, 5, 5);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0,-1,0);
+  glScalef(2,4,2);
   glutSolidCube(1);
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(2,0,0);
-  glutSolidSphere (1.0, 10, 10);
+  glTranslatef(1.25,-0.75,0);
+  {
+    glTranslatef(0,+1.5,0);
+    float angle = sin(tick/100.f)*45;
+    glRotatef(angle, 1.0, 0.0, 0.0);
+    glTranslatef(0,-1.5,0);
+  }
+  glScalef(0.5,4,0.5);
+  glutSolidCube(1);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-1.25,-0.75,0);
+  {
+    glTranslatef(0,+1.5,0);
+    float angle = -sin(tick/100.f)*45;
+    glRotatef(angle, 1.0, 0.0, 0.0);
+    glTranslatef(0,-1.5,0);
+  }
+  glScalef(0.5,4,0.5);
+  glutSolidCube(1);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0.75,-5,0);
+  {
+    glTranslatef(0,+1.5,0);
+    float angle = -sin(tick/100.f)*45;
+    glRotatef(angle, 1.0, 0.0, 0.0);
+    glTranslatef(0,-1.5,0);
+  }
+  glScalef(0.5,4,0.5);
+  glutSolidCube(1);
+  glPopMatrix();
+  
+  glPushMatrix();
+  glTranslatef(-0.75,-5,0);
+  {
+    glTranslatef(0,+1.5,0);
+    float angle = sin(tick/100.f)*45;
+    glRotatef(angle, 1.0, 0.0, 0.0);
+    glTranslatef(0,-1.5,0);
+  }
+  glScalef(0.5,4,0.5);
+  glutSolidCube(1);
   glPopMatrix();
 
   // Swap buffers
@@ -53,9 +124,7 @@ void reshape(int w, int h)
 
 void idle()
 {
-  cubeRotY += 0.5;
-  if (cubeRotY > 360.0)
-    cubeRotY -= 360.0;
+  tick++;
   glutPostRedisplay();
 }
 
@@ -124,7 +193,7 @@ int main(int argc, char** argv) {
   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
   GLfloat mat_shininess[] = { 50.0 };
   GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-  glClearColor (0.0, 0.0, 0.0, 0.0);
+  glClearColor (0.0, 0.5, 0.5, 0.0);
   glShadeModel (GL_SMOOTH);
   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
