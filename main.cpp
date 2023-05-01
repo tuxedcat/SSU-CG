@@ -1,6 +1,8 @@
+#include <bits/stdc++.h>
 #include <stdio.h>
 #include <GL/glut.h>
 #include <cmath>
+using namespace std;
 
 const double PI = 3.14159265358979323846;
 
@@ -18,9 +20,9 @@ void display()
   glLoadIdentity();
 
   // Apply camera transformation
-  glTranslatef(-camX, -camY, -camZ);
   glRotatef(-camRotX, 1.0, 0.0, 0.0);
   glRotatef(-camRotY, 0.0, 1.0, 0.0);
+  glTranslatef(-camX, -camY, -camZ);
 
   // glBegin(GL_TRIANGLES);
   // glColor3f(0.1, 0.2, 0.3);
@@ -131,20 +133,22 @@ void idle()
 void keyboard(unsigned char key, int x, int y) {
   switch (key) {
     case 'w':
-      camX += 0.1 * sin(camRotY * PI / 180.0);
+      camX -= 0.1 * sin(camRotY * PI / 180.0);
       camZ -= 0.1 * cos(camRotY * PI / 180.0);
+      cout<<camRotY<<' '<<sin(camRotY * PI / 180.0)<<' '<<cos(camRotY * PI / 180.0)<<endl;
+      camZ-=0.1;
       break;
     case 's':
-      camX -= 0.1 * sin(camRotY * PI / 180.0);
+      camX += 0.1 * sin(camRotY * PI / 180.0);
       camZ += 0.1 * cos(camRotY * PI / 180.0);
       break;
     case 'a':
       camX += 0.1 * sin((camRotY - 90.0) * PI / 180.0);
-      camZ -= 0.1 * cos((camRotY - 90.0) * PI / 180.0);
+      camZ += 0.1 * cos((camRotY - 90.0) * PI / 180.0);
       break;
     case 'd':
       camX -= 0.1 * sin((camRotY - 90.0) * PI / 180.0);
-      camZ += 0.1 * cos((camRotY - 90.0) * PI / 180.0);
+      camZ -= 0.1 * cos((camRotY - 90.0) * PI / 180.0);
       break;
     case 'q':
       camRotY += 2.0;
