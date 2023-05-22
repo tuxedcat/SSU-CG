@@ -135,8 +135,6 @@ void keyboard(unsigned char key, int x, int y) {
     case 'w':
       camX -= 0.1 * sin(camRotY * PI / 180.0);
       camZ -= 0.1 * cos(camRotY * PI / 180.0);
-      cout<<camRotY<<' '<<sin(camRotY * PI / 180.0)<<' '<<cos(camRotY * PI / 180.0)<<endl;
-      camZ-=0.1;
       break;
     case 's':
       camX += 0.1 * sin(camRotY * PI / 180.0);
@@ -150,35 +148,28 @@ void keyboard(unsigned char key, int x, int y) {
       camX -= 0.1 * sin((camRotY - 90.0) * PI / 180.0);
       camZ -= 0.1 * cos((camRotY - 90.0) * PI / 180.0);
       break;
-    case 'q':
-      camRotY += 2.0;
-      if (camRotY > 360.0) {
-        camRotY -= 360.0;
-      }
-      break;
-    case 'e':
-      camRotY -= 2.0;
-      if (camRotY < 0.0) {
-        camRotY += 360.0;
-      }
-      break;
-    case 'r':
-      camRotX += 2.0;
-      if (camRotX > 90.0) {
-        camRotX = 90.0;
-      }
-      break;
-    case 'f':
-      camRotX -= 2.0;
-      if (camRotX < -90.0) {
-        camRotX = -90.0;
-      }
-      break;
     // ESC = Quit
     case 27:
       exit(0);
       break;
   }
+}
+void mouseMotionHandler(int x, int y) {
+  static int px=0, py=0;
+  if(abs(x-px)+abs(y-py)<100){//heuristic
+    camRotY += 0.1*(x-px);
+    if (camRotY > 360.0)
+      camRotY -= 360.0;
+    if (camRotY < 0.0)
+      camRotY += 360.0;
+    
+    camRotX += 0.1*(y-py);
+    if (camRotX > 90.0)
+      camRotX = 90.0;
+    if (camRotX < -90.0)
+      camRotX = -90.0;
+  }
+  px=x,py=y;
 }
 
 int main(int argc, char** argv) {
@@ -193,6 +184,7 @@ int main(int argc, char** argv) {
   glutReshapeFunc(reshape);
   glutIdleFunc(idle);
   glutKeyboardFunc(keyboard);
+  glutMotionFunc(mouseMotionHandler);
 
   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
   GLfloat mat_shininess[] = { 50.0 };
