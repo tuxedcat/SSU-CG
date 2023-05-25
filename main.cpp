@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <GL/glut.h>
 #include <cmath>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+GLuint textureID;
 using namespace std;
 
 const double PI = 3.14159265358979323846;
@@ -59,15 +63,20 @@ void display()
 
 	//Cube Test
 	glPushMatrix();
-	{
-		float vertices[] = {
-			// positions          // colors           // texture coords
-			0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-			0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
-		};
-	}
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBegin(GL_QUADS);//GL_TRIANGLES
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-10, -10, 0.0);
+	glTexCoord2f(1, 0.0);
+	glVertex3f(10, -10, 0.0);
+	glTexCoord2f(1, 1);
+	glVertex3f(10, 10, 0.0);
+	glTexCoord2f(0.0, 1);
+	glVertex3f(-10, 10, 0.0);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glFlush();
 	glPopMatrix();
 
 	glPushMatrix();
@@ -210,6 +219,18 @@ int main(int argc, char** argv) {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
+
+	// Load texture
+	int width, height, channels;
+	unsigned char* image = stbi_load("texture.jpg", &width, &height, &channels, STBI_rgb);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	stbi_image_free(image);
 
 	// Start main loop
 	glutMainLoop();
