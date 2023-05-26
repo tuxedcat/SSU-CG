@@ -55,6 +55,10 @@ void display()
 	glRotatef(-camRotY, 0.0, 1.0, 0.0);
 	glTranslatef(-camX, -camY, -camZ);
 
+	auto head = new Sphere();
+	head->pos.y = 2;
+	root->adopt(head);
+	
 	root->draw();
 	
 	glPushMatrix();
@@ -241,8 +245,7 @@ int main(int argc, char** argv) {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	stbi_image_free(image);
 
-	root = new Sphere{};
-	root->pos.y=2;
+	root = new GameObject{};
 
 	// Start main loop
 	glutMainLoop();
