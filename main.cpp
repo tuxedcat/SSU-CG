@@ -127,8 +127,7 @@ int main(int argc, char** argv) {
 				camX -= 0.1 * sin((camRotY - 90.0) * PI / 180.0);
 				camZ -= 0.1 * cos((camRotY - 90.0) * PI / 180.0);
 				break;
-			// ESC = Quit
-			case 27:
+			case 27: // ESC = Quit
 				exit(0);
 				break;
 		}
@@ -165,7 +164,7 @@ int main(int argc, char** argv) {
 
 	root = new GameObject{};
 
-	auto head = new Sphere("texture.jpg");
+	auto head = new Sphere("head.jpg");
 	head->pos.y = 2;
 	root->adopt(head);
 
@@ -204,7 +203,6 @@ int main(int argc, char** argv) {
 	leg_r->scale={0.25,1,0.25};
 	body->adopt(leg_r);
 
-	// Start main loop
 	glutMainLoop();
 
 	return 0;
