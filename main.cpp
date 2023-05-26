@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Sphere.h"
+#include "Cube.h"
 
 GLuint textureID;
 
@@ -36,16 +37,15 @@ void display()
 	eye_l->pos = {0.3,2,0.9};
 	eye_l->scale = {0.1, 0.1, 0.1};
 	root->adopt(eye_l);
+
+	auto body = new Cube{};
+	body->pos.y=-1;
+	body->scale={2,4,2};
+	root->adopt(body);
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	root->draw();
-
-	glPushMatrix();
-	glTranslatef(0,-1,0);
-	glScalef(2,4,2);
-	glutSolidCube(1);
-	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(1.25,-0.75,0);
