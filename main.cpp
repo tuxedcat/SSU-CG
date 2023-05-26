@@ -23,98 +23,65 @@ void display()
 	glRotatef(-camRotX, 1.0, 0.0, 0.0);
 	glRotatef(-camRotY, 0.0, 1.0, 0.0);
 	glTranslatef(-camX, -camY, -camZ);
-
-	auto head = new Sphere();
-	head->pos.y = 2;
-	root->adopt(head);
-
-	auto eye_r = new Sphere();
-	eye_r->pos = {-0.3,2,0.9};
-	eye_r->scale = {0.1, 0.1, 0.1};
-	root->adopt(eye_r);
-
-	auto eye_l = new Sphere();
-	eye_l->pos = {0.3,2,0.9};
-	eye_l->scale = {0.1, 0.1, 0.1};
-	root->adopt(eye_l);
-
-	auto body = new Cube{};
-	body->pos.y=-1;
-	body->scale={2,4,2};
-	root->adopt(body);
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	root->draw();
 
-	glPushMatrix();
-	glTranslatef(1.25,-0.75,0);
-	{
-		glTranslatef(0,+1.5,0);
-		float angle = sin(tick/100.f)*45;
-		glRotatef(angle, 1.0, 0.0, 0.0);
-		glTranslatef(0,-1.5,0);
-	}
-	glScalef(0.5,4,0.5);
-	glutSolidCube(1);
-	glPopMatrix();
+	// arm_l
+	// glPushMatrix();
+	// glTranslatef(1.25,-0.75,0);
+	// {
+	// 	glTranslatef(0,+1.5,0);
+	// 	float angle = sin(tick/100.f)*45;
+	// 	glRotatef(angle, 1.0, 0.0, 0.0);
+	// 	glTranslatef(0,-1.5,0);
+	// }
+	// glScalef(0.5,4,0.5);
+	// glutSolidCube(1);
+	// glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(-1.25,-0.75,0);
-	{
-		glTranslatef(0,+1.5,0);
-		float angle = -sin(tick/100.f)*45;
-		glRotatef(angle, 1.0, 0.0, 0.0);
-		glTranslatef(0,-1.5,0);
-	}
-	glScalef(0.5,4,0.5);
-	glutSolidCube(1);
-	glPopMatrix();
+	// arm_r
+	// glPushMatrix();
+	// glTranslatef(-1.25,-0.75,0);
+	// {
+	// 	glTranslatef(0,+1.5,0);
+	// 	float angle = -sin(tick/100.f)*45;
+	// 	glRotatef(angle, 1.0, 0.0, 0.0);
+	// 	glTranslatef(0,-1.5,0);
+	// }
+	// glScalef(0.5,4,0.5);
+	// glutSolidCube(1);
+	// glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(0.75,-5,0);
-	{
-		glTranslatef(0,+1.5,0);
-		float angle = -sin(tick/100.f)*45;
-		glRotatef(angle, 1.0, 0.0, 0.0);
-		glTranslatef(0,-1.5,0);
-	}
-	glScalef(0.5,4,0.5);
-	glutSolidCube(1);
-	glPopMatrix();
+	// leg_l
+	// glPushMatrix();
+	// glTranslatef(0.75,-5,0);
+	// {
+	// 	glTranslatef(0,+1.5,0);
+	// 	float angle = -sin(tick/100.f)*45;
+	// 	glRotatef(angle, 1.0, 0.0, 0.0);
+	// 	glTranslatef(0,-1.5,0);
+	// }
+	// glScalef(0.5,4,0.5);
+	// glutSolidCube(1);
+	// glPopMatrix();
 	
-	glPushMatrix();
-	glTranslatef(-0.75,-5,0);
-	{
-		glTranslatef(0,+1.5,0);
-		float angle = sin(tick/100.f)*45;
-		glRotatef(angle, 1.0, 0.0, 0.0);
-		glTranslatef(0,-1.5,0);
-	}
-	glScalef(0.5,4,0.5);
-	glutSolidCube(1);
-	glPopMatrix();
-
-	//Texture Test
-	glPushMatrix();
-	glScalef(5,5,5);
-
-	glBegin(GL_QUADS);//GL_TRIANGLES
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-1, -1, 0.0);
-	glTexCoord2f(1, 0.0);
-	glVertex3f(1, -1, 0.0);
-	glTexCoord2f(1, 1);
-	glVertex3f(1, 1, 0.0);
-	glTexCoord2f(0.0, 1);
-	glVertex3f(-1, 1, 0.0);
-	glEnd();
+	// leg_r
+	// glPushMatrix();
+	// glTranslatef(-0.75,-5,0);
+	// {
+	// 	glTranslatef(0,+1.5,0);
+	// 	float angle = sin(tick/100.f)*45;
+	// 	glRotatef(angle, 1.0, 0.0, 0.0);
+	// 	glTranslatef(0,-1.5,0);
+	// }
+	// glScalef(0.5,4,0.5);
+	// glutSolidCube(1);
+	// glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
 	glFlush();
-	glPopMatrix();
-
-	// Swap buffers
 	glutSwapBuffers();
 }
 
@@ -212,6 +179,45 @@ int main(int argc, char** argv) {
 	stbi_image_free(image);
 
 	root = new GameObject{};
+
+	auto head = new Sphere();
+	head->pos.y = 2;
+	root->adopt(head);
+
+	auto eye_r = new Sphere();
+	eye_r->pos = {-0.3,2,0.9};
+	eye_r->scale = {0.1, 0.1, 0.1};
+	root->adopt(eye_r);
+
+	auto eye_l = new Sphere();
+	eye_l->pos = {0.3,2,0.9};
+	eye_l->scale = {0.1, 0.1, 0.1};
+	root->adopt(eye_l);
+
+	auto body = new Cube{};
+	body->pos.y=-1;
+	body->scale={2,4,2};
+	root->adopt(body);
+
+	auto arm_l = new Cube{};
+	arm_l->pos={0.625,0,0};
+	arm_l->scale={0.25,1,0.25};
+	body->adopt(arm_l);
+
+	auto arm_r = new Cube{};
+	arm_r->pos={-0.625,0,0};
+	arm_r->scale={0.25,1,0.25};
+	body->adopt(arm_r);
+
+	auto leg_l = new Cube{};
+	leg_l->pos={0.325,-1.1,0};
+	leg_l->scale={0.25,1,0.25};
+	body->adopt(leg_l);
+
+	auto leg_r = new Cube{};
+	leg_r->pos={-0.325,-1.1,0};
+	leg_r->scale={0.25,1,0.25};
+	body->adopt(leg_r);
 
 	// Start main loop
 	glutMainLoop();
