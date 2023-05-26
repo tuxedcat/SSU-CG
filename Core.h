@@ -6,3 +6,4 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 using namespace std;
+const double PI = 3.14159265358979323846;

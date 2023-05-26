@@ -2,7 +2,6 @@
 #include "Sphere.h"
 
 GLuint textureID;
-const double PI = 3.14159265358979323846;
 
 // Camera position and rotation
 GLfloat camX = 0.0, camY = 0.0, camZ = 5.0;
@@ -10,37 +9,6 @@ GLfloat camRotY = 0.0, camRotX = 0.0;
 int tick = 0;
 
 GameObject* root;
-
-void drawSphere(int slices, int stacks)
-{
-    for (int i = 0; i < slices; ++i)
-    {
-        double lat0 = PI * (-0.5 + static_cast<double>(i) / slices);
-        double lat1 = PI * (-0.5 + static_cast<double>(i + 1) / slices);
-        double y0 = sin(lat0);
-        double y1 = sin(lat1);
-        double cosLat0 = cos(lat0);
-        double cosLat1 = cos(lat1);
-        
-        glBegin(GL_QUAD_STRIP);
-        for (int j = 0; j <= stacks; ++j)
-        {
-            double lng = 2 * PI * static_cast<double>(j) / stacks;
-            double x = cos(lng);
-            double z = sin(lng);
-            
-            glNormal3f(x * cosLat0, y0, z * cosLat0);
-            glTexCoord2f(static_cast<double>(j) / stacks, static_cast<double>(i) / slices);
-            glVertex3f(x * cosLat0, y0, z * cosLat0);
-            
-            glNormal3f(x * cosLat1, y1, z * cosLat1);
-            glTexCoord2f(static_cast<double>(j) / stacks, static_cast<double>(i + 1) / slices);
-            glVertex3f(x * cosLat1, y1, z * cosLat1);
-        }
-        glEnd();
-    }
-}
-
 
 void display()
 {
@@ -58,18 +26,20 @@ void display()
 	auto head = new Sphere();
 	head->pos.y = 2;
 	root->adopt(head);
-	
-	root->draw();
-	
-	glPushMatrix();
-	glTranslatef(-0.3,2,0.9);
-	glutSolidSphere(0.1, 5, 5);
-	glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(0.3,2,0.9);
-	glutSolidSphere(0.1, 5, 5);
-	glPopMatrix();
+	auto eye_r = new Sphere();
+	eye_r->pos = {-0.3,2,0.9};
+	eye_r->scale = {0.1, 0.1, 0.1};
+	root->adopt(eye_r);
+
+	auto eye_l = new Sphere();
+	eye_l->pos = {0.3,2,0.9};
+	eye_l->scale = {0.1, 0.1, 0.1};
+	root->adopt(eye_l);
+	
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	root->draw();
 
 	glPushMatrix();
 	glTranslatef(0,-1,0);
@@ -125,13 +95,9 @@ void display()
 	glutSolidCube(1);
 	glPopMatrix();
 
-	//Cube Test
+	//Texture Test
 	glPushMatrix();
 	glScalef(5,5,5);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	drawSphere(8, 8);
 
 	glBegin(GL_QUADS);//GL_TRIANGLES
 	glTexCoord2f(0.0, 0.0);
