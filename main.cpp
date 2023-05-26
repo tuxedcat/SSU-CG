@@ -2,8 +2,6 @@
 #include "Sphere.h"
 #include "Cube.h"
 
-GLuint textureID;
-
 // Camera position and rotation
 GLfloat camX = 0.0, camY = 0.0, camZ = 5.0;
 GLfloat camRotY = 0.0, camRotX = 0.0;
@@ -25,7 +23,6 @@ void display()
 	glTranslatef(-camX, -camY, -camZ);
 	
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textureID);
 	root->draw();
 
 	// arm_l
@@ -166,55 +163,43 @@ int main(int argc, char** argv) {
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
 
-	// Load texture
-	int width, height, channels;
-	unsigned char* image = stbi_load("texture.jpg", &width, &height, &channels, STBI_rgb);
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	stbi_image_free(image);
-
 	root = new GameObject{};
 
-	auto head = new Sphere();
+	auto head = new Sphere("texture.jpg");
 	head->pos.y = 2;
 	root->adopt(head);
 
-	auto eye_r = new Sphere();
+	auto eye_r = new Sphere("texture.jpg");
 	eye_r->pos = {-0.3,2,0.9};
 	eye_r->scale = {0.1, 0.1, 0.1};
 	root->adopt(eye_r);
 
-	auto eye_l = new Sphere();
+	auto eye_l = new Sphere("texture.jpg");
 	eye_l->pos = {0.3,2,0.9};
 	eye_l->scale = {0.1, 0.1, 0.1};
 	root->adopt(eye_l);
 
-	auto body = new Cube{};
+	auto body = new Cube("texture.jpg");
 	body->pos.y=-1;
 	body->scale={2,4,2};
 	root->adopt(body);
 
-	auto arm_l = new Cube{};
+	auto arm_l = new Cube("texture.jpg");
 	arm_l->pos={0.625,0,0};
 	arm_l->scale={0.25,1,0.25};
 	body->adopt(arm_l);
 
-	auto arm_r = new Cube{};
+	auto arm_r = new Cube("texture.jpg");
 	arm_r->pos={-0.625,0,0};
 	arm_r->scale={0.25,1,0.25};
 	body->adopt(arm_r);
 
-	auto leg_l = new Cube{};
+	auto leg_l = new Cube("texture.jpg");
 	leg_l->pos={0.325,-1.1,0};
 	leg_l->scale={0.25,1,0.25};
 	body->adopt(leg_l);
 
-	auto leg_r = new Cube{};
+	auto leg_r = new Cube("texture.jpg");
 	leg_r->pos={-0.325,-1.1,0};
 	leg_r->scale={0.25,1,0.25};
 	body->adopt(leg_r);
