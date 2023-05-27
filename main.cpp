@@ -114,10 +114,16 @@ int main(int argc, char** argv) {
 			case 'w':
 				camX -= 0.1 * sin(camRotY * PI / 180.0);
 				camZ -= 0.1 * cos(camRotY * PI / 180.0);
+
+				// camZ += 0.1 * cos(camRotX * PI / 180.0);
+				camY += 0.1 * sin(camRotX * PI / 180.0);
 				break;
 			case 's':
 				camX += 0.1 * sin(camRotY * PI / 180.0);
 				camZ += 0.1 * cos(camRotY * PI / 180.0);
+
+				// camZ -= 0.1 * cos(camRotX * PI / 180.0);
+				camY -= 0.1 * sin(camRotX * PI / 180.0);
 				break;
 			case 'a':
 				camX += 0.1 * sin((camRotY - 90.0) * PI / 180.0);
