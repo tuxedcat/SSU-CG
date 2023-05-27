@@ -164,44 +164,38 @@ int main(int argc, char** argv) {
 
 	root = new GameObject{};
 
-	auto head = new Sphere("head.jpg");
-	head->pos.y = 2;
-	root->adopt(head);
-
-	auto eye_r = new Sphere("texture.jpg");
-	eye_r->pos = {-0.3,2,0.9};
-	eye_r->scale = {0.1, 0.1, 0.1};
-	root->adopt(eye_r);
-
-	auto eye_l = new Sphere("texture.jpg");
-	eye_l->pos = {0.3,2,0.9};
-	eye_l->scale = {0.1, 0.1, 0.1};
-	root->adopt(eye_l);
-
-	auto body = new Cube("texture.jpg");
+	auto body = new Cube("body.jpg");
 	body->pos.y=-1;
-	body->scale={2,4,2};
+	body->scale={2,4,1};
 	root->adopt(body);
 
-	auto arm_l = new Cube("texture.jpg");
-	arm_l->pos={0.625,0,0};
-	arm_l->scale={0.25,1,0.25};
-	body->adopt(arm_l);
+	auto body_rescale=new GameObject();
+	body_rescale->scale={0.5,0.25,1};
+	body->adopt(body_rescale);
 
-	auto arm_r = new Cube("texture.jpg");
-	arm_r->pos={-0.625,0,0};
-	arm_r->scale={0.25,1,0.25};
-	body->adopt(arm_r);
+	auto head = new Sphere("head.jpg");
+	head->pos.y = 3;
+	body_rescale->adopt(head);
 
-	auto leg_l = new Cube("texture.jpg");
-	leg_l->pos={0.325,-1.1,0};
-	leg_l->scale={0.25,1,0.25};
-	body->adopt(leg_l);
+	auto arm_l = new Cube("arm.jpg");
+	arm_l->pos={1.25,0,0};
+	arm_l->scale={0.5,4,0.5};
+	body_rescale->adopt(arm_l);
 
-	auto leg_r = new Cube("texture.jpg");
-	leg_r->pos={-0.325,-1.1,0};
-	leg_r->scale={0.25,1,0.25};
-	body->adopt(leg_r);
+	auto arm_r = new Cube("arm.jpg");
+	arm_r->pos={-1.25,0,0};
+	arm_r->scale={0.5,4,0.5};
+	body_rescale->adopt(arm_r);
+
+	auto leg_l = new Cube("leg.jpg");
+	leg_l->pos={0.65,-4,0};
+	leg_l->scale={0.5,4,0.5};
+	body_rescale->adopt(leg_l);
+
+	auto leg_r = new Cube("leg.jpg");
+	leg_r->pos={-0.65,-4,0};
+	leg_r->scale={0.5,4,0.5};
+	body_rescale->adopt(leg_r);
 
 	glutMainLoop();
 
