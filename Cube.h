@@ -22,6 +22,7 @@ private:
         glBegin(GL_QUADS);
 
         // Front face
+        glNormal3f(0.0, 0.0, 1.0);
         glTexCoord2f(0.0, 0.0);
         glVertex3f(-0.5, -0.5, 0.5);
         glTexCoord2f(1.0, 0.0);
@@ -32,6 +33,7 @@ private:
         glVertex3f(-0.5, 0.5, 0.5);
 
         // Back face
+        glNormal3f(0.0, 0.0, -1.0);
         glTexCoord2f(1.0, 0.0);
         glVertex3f(-0.5, -0.5, -0.5);
         glTexCoord2f(1.0, 1.0);
@@ -42,6 +44,7 @@ private:
         glVertex3f(0.5, -0.5, -0.5);
 
         // Top face
+        glNormal3f(0.0, 1.0, 0.0);
         glTexCoord2f(0.0, 1.0);
         glVertex3f(-0.5, 0.5, -0.5);
         glTexCoord2f(0.0, 0.0);
@@ -52,6 +55,7 @@ private:
         glVertex3f(0.5, 0.5, -0.5);
 
         // Bottom face
+        glNormal3f(0.0, -1.0, 0.0);
         glTexCoord2f(1.0, 1.0);
         glVertex3f(-0.5, -0.5, -0.5);
         glTexCoord2f(0.0, 1.0);
@@ -62,6 +66,7 @@ private:
         glVertex3f(-0.5, -0.5, 0.5);
 
         // Right face
+        glNormal3f(1.0, 0.0, 0.0);
         glTexCoord2f(1.0, 0.0);
         glVertex3f(0.5, -0.5, -0.5);
         glTexCoord2f(1.0, 1.0);
@@ -72,6 +77,7 @@ private:
         glVertex3f(0.5, -0.5, 0.5);
 
         // Left face
+        glNormal3f(-1.0, 0.0, 0.0);
         glTexCoord2f(0.0, 0.0);
         glVertex3f(-0.5, -0.5, -0.5);
         glTexCoord2f(1.0, 0.0);
