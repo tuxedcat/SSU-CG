@@ -92,17 +92,17 @@ int main(int argc, char** argv) {
 	// Set up callbacks
 	glutDisplayFunc(display);
 	glutReshapeFunc([](int w,int h){
-			// Set viewport to cover entire window
-			glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+		// Set viewport to cover entire window
+		glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 
-			// Set projection matrix
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
+		// Set projection matrix
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
 
-			// Reset modelview matrix
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+		// Reset modelview matrix
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 		
 	});
 	glutIdleFunc([](){
@@ -178,6 +178,10 @@ int main(int argc, char** argv) {
 	auto body_rescale=new GameObject();
 	body_rescale->scale={0.5,0.25,1};
 	body->adopt(body_rescale);
+
+	auto neck = new Cube("skin.jpg");
+	neck->pos.y = 2.5;
+	body_rescale->adopt(neck);
 
 	auto head = new Sphere("head.jpg");
 	head->pos.y = 3;
