@@ -21,6 +21,10 @@ void display()
 	glRotatef(-camRotX, 1.0, 0.0, 0.0);
 	glRotatef(-camRotY, 0.0, 1.0, 0.0);
 	glTranslatef(-camX, -camY, -camZ);
+
+	// GLfloat light_pos[4]={camX,camY,camZ,0.0};//Light pos = camera pos
+	GLfloat light_pos[4]={1,1,1,0};//Light pos = absolute
+	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 	
 	glEnable(GL_TEXTURE_2D);
 	root->draw();
@@ -158,12 +162,10 @@ int main(int argc, char** argv) {
 
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 	glClearColor (0.0, 0.5, 0.5, 0.0);
 	glShadeModel (GL_SMOOTH);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
