@@ -29,32 +29,6 @@ void display()
 	glEnable(GL_TEXTURE_2D);
 	root->draw();
 
-	// arm_l
-	// glPushMatrix();
-	// glTranslatef(1.25,-0.75,0);
-	// {
-	// 	glTranslatef(0,+1.5,0);
-	// 	float angle = sin(tick/100.f)*45;
-	// 	glRotatef(angle, 1.0, 0.0, 0.0);
-	// 	glTranslatef(0,-1.5,0);
-	// }
-	// glScalef(0.5,4,0.5);
-	// glutSolidCube(1);
-	// glPopMatrix();
-
-	// arm_r
-	// glPushMatrix();
-	// glTranslatef(-1.25,-0.75,0);
-	// {
-	// 	glTranslatef(0,+1.5,0);
-	// 	float angle = -sin(tick/100.f)*45;
-	// 	glRotatef(angle, 1.0, 0.0, 0.0);
-	// 	glTranslatef(0,-1.5,0);
-	// }
-	// glScalef(0.5,4,0.5);
-	// glutSolidCube(1);
-	// glPopMatrix();
-
 	// leg_l
 	// glPushMatrix();
 	// glTranslatef(0.75,-5,0);
@@ -111,6 +85,7 @@ int main(int argc, char** argv) {
 	});
 	glutIdleFunc([](){
 		tick++;
+		root->update();
 		glutPostRedisplay();
 	});
 	glutKeyboardFunc([](unsigned char key, int x, int y) {
@@ -162,7 +137,7 @@ int main(int argc, char** argv) {
 
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
-	glClearColor (0.0, 0.5, 0.5, 0.0);
+	glClearColor (0.6, 0.85, 1.0, 0.0);
 	glShadeModel (GL_SMOOTH);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -189,25 +164,58 @@ int main(int argc, char** argv) {
 	head->pos.y = 3;
 	body_rescale->adopt(head);
 
+	auto arm_l_anchor = new GameObject;
+	arm_l_anchor->onUpdate=[arm_l_anchor](){
+		arm_l_anchor->rot.x=sin(tick/100.f)*45;
+	};
+	arm_l_anchor->pos={0,2,0};
+	body_rescale->adopt(arm_l_anchor);
+	
 	auto arm_l = new Cube("arm.jpg");
-	arm_l->pos={1.25,0,0};
+	arm_l->pos={1.25,-2,0};
 	arm_l->scale={0.5,4,0.5};
-	body_rescale->adopt(arm_l);
+	arm_l_anchor->adopt(arm_l);
+
+	auto arm_r_anchor = new GameObject;
+	arm_r_anchor->onUpdate=[arm_r_anchor](){
+		arm_r_anchor->rot.x=-sin(tick/100.f)*45;
+	};
+	arm_r_anchor->pos={0,2,0};
+	body_rescale->adopt(arm_r_anchor);
 
 	auto arm_r = new Cube("arm.jpg");
-	arm_r->pos={-1.25,0,0};
+	arm_r->pos={-1.25,-2,0};
 	arm_r->scale={0.5,4,0.5};
-	body_rescale->adopt(arm_r);
+	arm_r_anchor->adopt(arm_r);
+
+	auto leg_l_anchor = new GameObject;
+	leg_l_anchor->onUpdate=[leg_l_anchor](){
+		leg_l_anchor->rot.x=-sin(tick/100.f)*45;
+	};
+	leg_l_anchor->pos={0,-2,0};
+	body_rescale->adopt(leg_l_anchor);
 
 	auto leg_l = new Cube("leg.jpg");
-	leg_l->pos={0.65,-4,0};
+	leg_l->pos={0.65,-2,0};
 	leg_l->scale={0.5,4,0.5};
-	body_rescale->adopt(leg_l);
+	leg_l_anchor->adopt(leg_l);
+
+	auto leg_r_anchor = new GameObject;
+	leg_r_anchor->onUpdate=[leg_r_anchor](){
+		leg_r_anchor->rot.x=sin(tick/100.f)*45;
+	};
+	leg_r_anchor->pos={0,-2,0};
+	body_rescale->adopt(leg_r_anchor);
 
 	auto leg_r = new Cube("leg.jpg");
-	leg_r->pos={-0.65,-4,0};
+	leg_r->pos={-0.65,-2,0};
 	leg_r->scale={0.5,4,0.5};
-	body_rescale->adopt(leg_r);
+	leg_r_anchor->adopt(leg_r);
+
+	auto land = new Cube("land.jpg");
+	land->pos={0,-7,0};
+	land->scale={100,0.2,100};
+	root->adopt(land);
 
 	glutMainLoop();
 
