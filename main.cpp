@@ -29,32 +29,6 @@ void display()
 	glEnable(GL_TEXTURE_2D);
 	root->draw();
 
-	// leg_l
-	// glPushMatrix();
-	// glTranslatef(0.75,-5,0);
-	// {
-	// 	glTranslatef(0,+1.5,0);
-	// 	float angle = -sin(tick/100.f)*45;
-	// 	glRotatef(angle, 1.0, 0.0, 0.0);
-	// 	glTranslatef(0,-1.5,0);
-	// }
-	// glScalef(0.5,4,0.5);
-	// glutSolidCube(1);
-	// glPopMatrix();
-	
-	// leg_r
-	// glPushMatrix();
-	// glTranslatef(-0.75,-5,0);
-	// {
-	// 	glTranslatef(0,+1.5,0);
-	// 	float angle = sin(tick/100.f)*45;
-	// 	glRotatef(angle, 1.0, 0.0, 0.0);
-	// 	glTranslatef(0,-1.5,0);
-	// }
-	// glScalef(0.5,4,0.5);
-	// glutSolidCube(1);
-	// glPopMatrix();
-
 	glDisable(GL_TEXTURE_2D);
 	glFlush();
 	glutSwapBuffers();

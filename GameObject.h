@@ -28,10 +28,10 @@ public:
             i->draw();
         glPopMatrix();
     }
+    virtual void onDraw(){};
     void update(){
         onUpdate();
         for(auto i:children)
             i->update();
     }
-    virtual void onDraw(){};
 };
