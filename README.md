@@ -12,7 +12,7 @@ Computer Graphics term project, Soongsil University 2023 Spring
 # Snapshots
 ![](https://github.com/tuxedcat/SSUCG/blob/main/submit/1.png)
 ![](https://github.com/tuxedcat/SSUCG/blob/main/submit/2.png)
-https://youtu.be/8qIO4likGfM
+Video: https://youtu.be/8qIO4likGfM
 
 # Result
 ![](https://github.com/tuxedcat/SSUCG/blob/main/submit/result.png)  
